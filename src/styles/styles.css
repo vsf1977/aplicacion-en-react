@@ -1,7 +1,7 @@
 ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
     overflow: hidden;
     background-color: green;
   }
@@ -15,14 +15,28 @@ ul {
     color: white;
     text-align: center;
     padding: 14px 16px;
-    text-decoration: none;
+    text-decoration: none !important;
   }
   
-  /* Change the link color to #111 (black) on hover */
   li a:hover {
     background-color: #111;
   }
 
-  body{
-    margin: 0px;
+  .tarjetas{
+    margin: 10px;
+  }
+
+  .container{
+    margin: 80px 180px 0px 0px !important;
+    padding: 0px !important;
+
+  }
+
+  .nav_bar {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    z-index: 3;
   }

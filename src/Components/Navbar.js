@@ -1,6 +1,6 @@
-function NavBar() {
+function NavBar() {  
   return (
-    <div>
+    <div className="nav_bar">
       <ul>
         <li><a href="#home">Clientes</a></li>
         <li><a href="#news">Facturas</a></li>
