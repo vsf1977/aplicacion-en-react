@@ -1,27 +1,39 @@
-import ClientService from '../services/clientServices';
+import DataService from '../services/dataServices';
+import messageService from '../services/messageService';
 import React, { useState, useEffect } from 'react'
-const url = require('../env/env')
 
 export default function Tarjeta() {
-  const [clientes, initTarjeta] = useState([])
-  const clientService = new ClientService()
-  const fetchData = async () => {
-    const response = await clientService.getAll()      
+
+  const [clientes, initTarjeta] = useState([]);
+  const [mensaje, setMensaje] = useState();
+  const dataService = new DataService()
+  const fetchData = async (route) => {
+    const response = await dataService.getAll(route)      
     if (!response.ok) {
-      throw new Error('Data coud not be fetched!')
+      throw new Error('Data could not be fetched!')
     } else {
       return response.json()
     }
   }
-  useEffect(() => {
-    fetchData()
-      .then((res) => {
-        initTarjeta(res)
-      })
-      .catch((e) => {
-        console.log(e.message)
-      })
+
+  useEffect(() => {    
+    messageService.getMessage().subscribe(message => {
+      if (message) {
+        setMensaje(message)
+        fetchData(message)
+          .then((res) => {
+            initTarjeta(res)
+            console.log(res)
+          })
+          .catch((e) => {
+            console.log(e.message)
+          })
+      } else {
+        throw new Error('Route could not be fetched!')
+      }
+    });
   }, [])
+
   return (
     <div className="row container">
       {clientes.map((item, idx) => {
@@ -29,6 +41,7 @@ export default function Tarjeta() {
           <div className="col-lg-2 col-md-3 col-sm-6 mb-3 tarjetas" key={idx}>
             <div className="card h-100">
               <ul className="list-group list-group-flush">
+                { mensaje==='client' ? <div>
                 <li className="list-group-item">
                   <strong>Nombre:</strong> {item.Nombre}
                 </li>
@@ -37,11 +50,23 @@ export default function Tarjeta() {
                 </li>
                 <li className="list-group-item">
                   <strong>Fecha Nacimiento:</strong> {item.FechaNacimiento}
+                </li> </div> : <div></div>
+                }
+                { mensaje==='bill' ? <div>
+                <li className="list-group-item">
+                  <strong>Nombre:</strong> {item.IDCliente}
                 </li>
+                <li className="list-group-item">
+                  <strong>Capital:</strong> {item.IDFactura}
+                </li>
+                <li className="list-group-item">
+                  <strong>Fecha Nacimiento:</strong> {item.Fecha}
+                </li> </div> : <div></div>
+                }
                 <button>Editar</button>
                 <button>Eliminar</button>
               </ul>
-            </div>z
+            </div>
           </div>
         )
       })}

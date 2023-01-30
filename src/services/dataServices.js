@@ -1,14 +1,14 @@
 import { Component } from 'react';
 const url = require('../env/env')
 
-class ClientService extends Component {
+class DataService extends Component {
 
   constructor(props) {
     super(props);
   }
-
-  getAll() {
-    return fetch(url + 'client/getall')       
+  
+  getAll(ruta) {
+    return fetch(url + ruta + '/getall')       
   }
 
   getById(id) {
@@ -40,6 +40,10 @@ class ClientService extends Component {
       })
   }
 
+  setRoute(ruta) {
+    this.ruta = ruta;
+  }
+
 }
 
-export default ClientService;
+export default DataService;
