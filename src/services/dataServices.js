@@ -40,10 +40,6 @@ class DataService extends Component {
       })
   }
 
-  setRoute(ruta) {
-    this.ruta = ruta;
-  }
-
 }
 
 export default DataService;

@@ -1,5 +1,5 @@
 import DataService from '../services/dataServices';
-import messageService from '../services/messageService';
+import apiRouteService from '../services/apiRouteService';
 import React, { useState, useEffect } from 'react'
 
 export default function Tarjeta() {
@@ -17,7 +17,7 @@ export default function Tarjeta() {
   }
 
   useEffect(() => {    
-    messageService.getMessage().subscribe(message => {
+    apiRouteService.getRoute().subscribe(message => {
       if (message) {
         setMensaje(message)
         fetchData(message)
@@ -52,10 +52,7 @@ export default function Tarjeta() {
                   <strong>Fecha Nacimiento:</strong> {item.FechaNacimiento}
                 </li> </div> : <div></div>
                 }
-                { mensaje==='bill' ? <div>
-                <li className="list-group-item">
-                  <strong>Nombre:</strong> {item.IDCliente}
-                </li>
+                { mensaje==='bill' ? <div>                
                 <li className="list-group-item">
                   <strong>Capital:</strong> {item.IDFactura}
                 </li>
