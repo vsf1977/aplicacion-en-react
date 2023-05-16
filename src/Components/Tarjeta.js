@@ -16,8 +16,27 @@ export default function Tarjeta() {
     }
   }
 
-  const erase = (p) => {
-    console.log(p.target.id)
+  const erase = async (p) => {
+    console.log(p.target.id, mensaje)
+    const response = await dataService.delete(mensaje,p.target.id)    
+    fetchData(mensaje)
+      .then((res) => {            
+        initTarjeta(res)
+      })
+      .catch((e) => {
+      })
+  }
+
+  const edit = (p) => {
+    console.log(p.target.id, mensaje)
+    fetchData(mensaje)
+      .then((res) => {            
+        console.log(res)
+        initTarjeta(res)
+      })
+      .catch((e) => {
+        console.log(e.message)
+      })
   }
 
 
@@ -74,8 +93,8 @@ export default function Tarjeta() {
                   <strong>Cantidad:</strong> {item.Cantidad}
                 </li> </div> : <div></div>
                 }
-                <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={erase}>Editar</button>
-                <button>Eliminar</button>
+                <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={edit}>Editar</button>
+                <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={erase}>Eliminar</button>
               </ul>
             </div>
           </div>
