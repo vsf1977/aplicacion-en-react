@@ -1,6 +1,7 @@
 import DataService from '../services/dataServices';
 import apiRouteService from '../services/apiRouteService';
 import React, { useState, useEffect } from 'react'
+import Popup from 'reactjs-popup';
 
 export default function Tarjeta() {
 
@@ -28,15 +29,7 @@ export default function Tarjeta() {
   }
 
   const edit = (p) => {
-    console.log(p.target.id, mensaje)
-    fetchData(mensaje)
-      .then((res) => {            
-        console.log(res)
-        initTarjeta(res)
-      })
-      .catch((e) => {
-        console.log(e.message)
-      })
+    console.log(p.target.id)
   }
 
 
@@ -92,8 +85,19 @@ export default function Tarjeta() {
                 <li className="list-group-item">
                   <strong>Cantidad:</strong> {item.Cantidad}
                 </li> </div> : <div></div>
+                }              
+                <Popup trigger={<button>Editar</button>}
+                modal nested>
+                { close => (<div className='popupcontent'>
+                                <span>Welcome to GFG!!!</span>
+                                <div>
+                                    <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={edit}>
+                                        Close modal
+                                    </button>
+                                </div>
+                            </div>)
                 }
-                <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={edit}>Editar</button>
+                </Popup>
                 <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={erase}>Eliminar</button>
               </ul>
             </div>
