@@ -19,6 +19,14 @@ class DataService extends Component {
       })
   }
 
+  update(route,item) {
+    return fetch(url + route, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(item)
+      })
+  }
+
 }
 
 export default DataService;

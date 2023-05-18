@@ -1,12 +1,12 @@
 import DataService from '../services/dataServices';
 import apiRouteService from '../services/apiRouteService';
 import React, { useState, useEffect } from 'react'
-import Popup from 'reactjs-popup';
+import Modal from './Modal';
 
 export default function Tarjeta() {
 
   const [data, initTarjeta] = useState([]);
-  const [mensaje, setMensaje] = useState();
+  const [route, setRoute] = useState();
   const dataService = new DataService()
   const fetchData = async (route) => {
     const response = await dataService.getAll(route)      
@@ -17,10 +17,8 @@ export default function Tarjeta() {
     }
   }
 
-  const erase = async (p) => {
-    console.log(p.target.id, mensaje)
-    const response = await dataService.delete(mensaje,p.target.id)    
-    fetchData(mensaje)
+  const refresh = () => {
+    fetchData(route)
       .then((res) => {            
         initTarjeta(res)
       })
@@ -28,18 +26,43 @@ export default function Tarjeta() {
       })
   }
 
-  const edit = (p) => {
-    console.log(p.target.id)
+  const erase = async (p) => {
+    let str = route === "client" ? "este cliente?" : route === "bill" ? "esta factura?" : "este producto?"
+    if (window.confirm("Desea borrar " + str ))
+    {
+      console.log(data)
+      let del = true;
+      if (route==="client")
+        if (data.filter(x=>x.IDCliente===p.target.id)[0].Factura.length > 0)
+        {
+          alert("Este cliente aun tiene facturas, debe eliminarlas primero")
+          del = false;
+        }
+      if (route==="product") 
+        if (data.filter(x=>x.IDProducto===p.target.id)[0].Factura.length > 0)
+        {
+          alert("Hay facturas con este producto, debe eliminarlas primero")
+          del = false;
+        }
+      if (del){
+        await dataService.delete(route,p.target.id)   
+        console.log("se borra") 
+        fetchData(route)
+          .then((res) => {            
+            initTarjeta(res)
+          })
+          .catch((e) => {
+          })
+      }
+    }
   }
-
 
   useEffect(() => {    
     apiRouteService.getRoute().subscribe(message => {
       if (message) {
-        setMensaje(message)
+        setRoute(message)
         fetchData(message)
           .then((res) => {            
-            console.log(res)
             initTarjeta(res)
           })
           .catch((e) => {
@@ -48,8 +71,9 @@ export default function Tarjeta() {
       } else {
         throw new Error('Route could not be fetched!')
       }
-    });
+    });    
   }, [])
+
 
   return (
     <div className="row container">
@@ -58,7 +82,7 @@ export default function Tarjeta() {
           <div className="col-lg-2 col-md-3 col-sm-6 mb-3 tarjetas" key={idx}>
             <div className="card h-100">
               <ul className="list-group list-group-flush">
-                { mensaje==='client' ? <div>
+                { route==='client' ? <div>
                 <li className="list-group-item">
                   <strong>Nombre:</strong> {item.Nombre}
                 </li>
@@ -69,10 +93,10 @@ export default function Tarjeta() {
                   <strong>Fecha Nacimiento:</strong> {item.FechaNacimiento}
                 </li>
                 <li className="list-group-item">
-                  <strong>No de Facturas:</strong> {item.Factura != undefined ? item.Factura.length :0}
+                  <strong>No de Facturas:</strong> {item.Factura !== undefined ? item.Factura.length :0}
                 </li> </div> : <div></div>
                 }
-                { mensaje==='bill' ? <div>                
+                { route==='bill' ? <div>                
                 <li className="list-group-item">
                   <strong>Nombre Cliente:</strong> {item.Nombre + ' ' + item.Apellidos}
                 </li>
@@ -83,22 +107,25 @@ export default function Tarjeta() {
                   <strong>Valor Total:</strong> {item.Total}
                 </li>
                 <li className="list-group-item">
-                  <strong>Cantidad:</strong> {item.Cantidad}
+                  <strong>Cantidad de productos:</strong> {item.Cantidad}
                 </li> </div> : <div></div>
-                }              
-                <Popup trigger={<button>Editar</button>}
-                modal nested>
-                { close => (<div className='popupcontent'>
-                                <span>Welcome to GFG!!!</span>
-                                <div>
-                                    <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={edit}>
-                                        Close modal
-                                    </button>
-                                </div>
-                            </div>)
-                }
-                </Popup>
-                <button id= {item.IDFactura != undefined ? item.IDFactura : item.IDCliente} onClick={erase}>Eliminar</button>
+                }          
+                { route==='product' ? <div>                
+                <li className="list-group-item">
+                  <strong>Nombre:</strong> {item.Nombre}
+                </li>
+                <li className="list-group-item">
+                  <strong>Precio:</strong> {item.Precio}
+                </li> </div> : <div></div>
+                }   
+                <Modal 
+                    trigger={<button>Editar</button>} 
+                    data={data}  
+                    route={route} 
+                    currentItem={item.IDFactura !== undefined ? item.IDFactura : item.IDCliente !== undefined ? item.IDCliente : item.IDProducto} 
+                    whenClose={()=> { refresh() }}>
+                </Modal>
+                <button id= {item.IDFactura !== undefined ? item.IDFactura : item.IDCliente !== undefined ? item.IDCliente : item.IDProducto} onClick={erase}>Eliminar</button>
               </ul>
             </div>
           </div>

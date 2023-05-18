@@ -20,7 +20,7 @@ ul {
   }
   
   li a:hover {
-    background-color: #111;
+    background-color: greenyellow;
   }
 
   .list-group > div{
@@ -51,7 +51,7 @@ ul {
   }
 
   .actual{
-    background-color: blue;
+    background-color: greenyellow;
     text-decoration: none !important;
     color: black;
   }
@@ -63,22 +63,25 @@ ul {
 
   .popupcontent {
     margin: auto;
-    background: rgb(255, 255, 255);
+    background: burlywood;
     box-shadow : 8px 8px black;
-    width: 1000px;
-    padding: 5px;
-  }
-  .popup-arrow {
-    color: rgb(255, 255, 255);
-  }
-  [role='tooltip'].popup-content {
-    width: 200px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+    width: fit-content;
+    padding: 20px;
   }
   
-  .popup-overlay {
-    background: rgba(0, 0, 0, 0.5);
+  .inputs{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px !important;
+    width: 300px !important;
   }
-  [data-popup='tooltip'].popup-overlay {
-    background: transparent;
+
+  .inputs > *{
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
+
+  
