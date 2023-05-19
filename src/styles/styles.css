@@ -62,21 +62,24 @@ ul {
   }
 
   .popupcontent {
-    margin: auto;
     background: burlywood;
     box-shadow : 8px 8px black;
     width: fit-content;
     padding: 20px;
+    position:absolute;
+    left: 50%;
+    top : 50%;
+    transform: translate(-50%,-50%);
+
   }
   
   .inputs{
     display: flex;
     flex-direction: column;
     margin-bottom: 10px !important;
-    width: 300px !important;
   }
 
-  .inputs > *{
+  .inputs > div, #buttons{
     margin-bottom: 10px;
     display: flex;
     flex-direction: row;

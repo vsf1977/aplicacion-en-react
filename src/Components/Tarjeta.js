@@ -1,12 +1,33 @@
 import DataService from '../services/dataServices';
 import apiRouteService from '../services/apiRouteService';
 import React, { useState, useEffect } from 'react'
-import Modal from './Modal';
+import Modalpop from './Modalpop';
 
 export default function Tarjeta() {
 
   const [data, initTarjeta] = useState([]);
   const [route, setRoute] = useState();
+  const [itemID, setitemID] = useState();
+  const [clients, setClients] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const getClients = async () =>{
+    const response = await dataService.getAll("client")      
+    if (!response.ok) {
+        throw new Error('Data could not be fetched!')
+    } else {
+        return response.json()
+    }  
+  }  
+
+  const handleOpen = (p) => {
+    getClients().then((res) => {
+      setClients(res)
+      setitemID(p.target.id)
+      setOpen(true);
+    })
+  }
+  const handleClose = () => setOpen(false);
   const dataService = new DataService()
   const fetchData = async (route) => {
     const response = await dataService.getAll(route)      
@@ -19,12 +40,13 @@ export default function Tarjeta() {
 
   const refresh = () => {
     fetchData(route)
-      .then((res) => {            
+      .then((res) => {    
         initTarjeta(res)
       })
       .catch((e) => {
       })
-  }
+    handleClose()
+  }  
 
   const erase = async (p) => {
     let str = route === "client" ? "este cliente?" : route === "bill" ? "esta factura?" : "este producto?"
@@ -118,13 +140,15 @@ export default function Tarjeta() {
                   <strong>Precio:</strong> {item.Precio}
                 </li> </div> : <div></div>
                 }   
-                <Modal 
-                    trigger={<button>Editar</button>} 
+                <button id= {item.IDFactura !== undefined ? item.IDFactura : item.IDCliente !== undefined ? item.IDCliente : item.IDProducto} onClick={handleOpen}>Editar</button>
+                <Modalpop 
+                    open={open}
                     data={data}  
+                    clients={clients}
                     route={route} 
-                    currentItem={item.IDFactura !== undefined ? item.IDFactura : item.IDCliente !== undefined ? item.IDCliente : item.IDProducto} 
-                    whenClose={()=> { refresh() }}>
-                </Modal>
+                    currentItem={itemID} 
+                    whenClose={refresh}>
+                </Modalpop>
                 <button id= {item.IDFactura !== undefined ? item.IDFactura : item.IDCliente !== undefined ? item.IDCliente : item.IDProducto} onClick={erase}>Eliminar</button>
               </ul>
             </div>
