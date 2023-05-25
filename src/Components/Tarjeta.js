@@ -38,13 +38,16 @@ export default function Tarjeta() {
     }
   }
 
-  const refresh = () => {
+  const refresh = (action) => {
+    console.log(action)
+    if (action) {
     fetchData(route)
       .then((res) => {    
         initTarjeta(res)
       })
       .catch((e) => {
       })
+    }
     handleClose()
   }  
 

@@ -21,6 +21,15 @@ export default function Modalpop(props) {
             break;
     }
 
+
+    const escFunction = (event) => {
+        if (event.key === "Escape" && props.open) {
+            props.whenClose(false)
+        }
+    }
+
+    window.addEventListener('keydown', escFunction);
+
     const edit = async () => {
         let str
         if (props.route === "client")
@@ -34,13 +43,13 @@ export default function Modalpop(props) {
         {
             await dataService.update(props.route,item) 
         }
-        props.whenClose()
+        props.whenClose(true)
         setBill({})
         item={}     
     }  
 
     const closeModal = () =>{
-        props.whenClose()
+        props.whenClose(true)
     }
 
     if (props.open && props.route === "bill"){
@@ -92,8 +101,16 @@ export default function Modalpop(props) {
             : <div></div>
             }
             { props.route==='product' ? 
-            <div>
-                <span>Producto</span>
+            <div className='inputs'>
+                <span>Factura</span>
+                <div>
+                    <span>Nombre</span> 
+                    <input type='text' defaultValue={item.Nombre} onChange={e => {item.Nombre = e.target.value; console.log(item)}}/>
+                </div>
+                <div>
+                    <span>Precio</span>
+                    <input type='number' defaultValue={item.Precio} onChange={e => {item.Precio = e.target.value; console.log(item)}}/>
+                </div>
             </div>
             : <div></div>
             } </div> : <div></div> }

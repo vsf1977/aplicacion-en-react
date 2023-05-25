@@ -13,7 +13,7 @@ export default class Navbar extends Component {
     menu.forEach(item => {
       item.classList.remove("actual")
       item.classList.add("normal")
-      if (item.firstChild.id == ruta)        
+      if (item.firstChild.id === ruta)        
       {
         item.classList.add('actual')
         item.classList.remove("normal")
@@ -29,6 +29,7 @@ export default class Navbar extends Component {
           <li><a id='bill' onClick={(event)=>this.routing(event)}>Facturas</a></li>
           <li><a id='product' onClick={(event)=>this.routing(event)}>Productos</a></li>
         </ul>
+        <i class="fa-solid fa-plus"></i>
       </div>
     );
   }
